@@ -20,13 +20,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.projectlombok:lombok:1.18.4")
 	implementation("com.alibaba:fastjson:1.2.70")
 	implementation("commons-lang:commons-lang:2.6")
 	implementation("com.baomidou:mybatis-plus-boot-starter:3.1.2") {
 		exclude(group = "com.baomidou", module = "mybatis-plus-generator")
 	}
-	implementation("com.alibaba:druid-spring-boot-starter:1.1.13")
+	implementation("com.alibaba:druid-spring-boot-starter:1.1.22")
 	implementation("mysql:mysql-connector-java:8.0.16")
 	implementation("org.hibernate:hibernate-validator:6.0.17.Final")
 }

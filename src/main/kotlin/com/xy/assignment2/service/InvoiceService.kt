@@ -3,6 +3,7 @@ package com.xy.assignment2.service
 import com.baomidou.mybatisplus.extension.service.IService
 import com.xy.assignment2.entity.InvoiceEntity
 import com.xy.assignment2.exception.SQLOperationException
+import com.xy.assignment2.utils.PageUtils
 
 /**
  * @ Author: Xiong Yao
@@ -15,7 +16,8 @@ import com.xy.assignment2.exception.SQLOperationException
 
 
 open interface InvoiceService : IService<InvoiceEntity?> {
-    fun queryAll(params: Map<String?, String?>?): List<InvoiceEntity?>?
+
+    fun queryAll(params: Map<String?, String?>?): PageUtils
 
     @Throws(SQLOperationException::class)
     fun saveInvoice(invoice: InvoiceEntity)

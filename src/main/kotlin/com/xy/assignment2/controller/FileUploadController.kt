@@ -102,7 +102,7 @@ class FileUploadController {
             if (rowItems.size < 8) {
                 break
             }
-            val invoice = InvoiceEntity(rowItems[0], rowItems[1], rowItems[2], rowItems[3].toInt(),
+            val invoice = InvoiceEntity(null, rowItems[0], rowItems[1], rowItems[2], rowItems[3].toInt(),
                     rowItems[4], rowItems[5].toDouble(), rowItems[6], rowItems[7])
             try {
                 invoiceService.saveInvoice(invoice)

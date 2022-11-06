@@ -6,8 +6,11 @@ import com.xy.assignment2.dao.InvoiceDao
 import com.xy.assignment2.entity.InvoiceEntity
 import com.xy.assignment2.exception.SQLOperationException
 import com.xy.assignment2.service.InvoiceService
+import com.xy.assignment2.utils.PageUtils
+import com.xy.assignment2.utils.SqlFilter
 import com.xy.assignment2.validator.ValidatorUtils
 import com.xy.assignment2.validator.group.AddGroup
+import org.apache.commons.lang.StringUtils
 import org.springframework.stereotype.Service
 
 /**
@@ -20,11 +23,35 @@ import org.springframework.stereotype.Service
  */
 
 @Service("invoiceService")
-class InvoiceServiceImpl : ServiceImpl<InvoiceDao?, InvoiceEntity?>(), InvoiceService {
+class InvoiceServiceImpl : ServiceImpl<InvoiceDao, InvoiceEntity>(), InvoiceService {
 
-    override fun queryAll(params: Map<String?, String?>?): List<InvoiceEntity?> {
+    override fun queryAll(params: Map<String?, String?>?): PageUtils {
         val wrapper: QueryWrapper<InvoiceEntity> = QueryWrapper<InvoiceEntity>()
-        return list(wrapper)
+        var url = "http://localhost:8080/invoice/list?"
+        if (params!!.containsKey("keyword")) {
+            val keyword = params["keyword"]
+            if (!StringUtils.isBlank(keyword)) {
+                val sqlInject = SqlFilter.sqlInject(keyword!!)
+                url += "keyword=$keyword&"
+                wrapper.and { w: QueryWrapper<InvoiceEntity?> ->
+                    w.like("invoice_no", sqlInject).or().like("stock_code", sqlInject).or()
+                            .like("description", sqlInject).or().like("customer_id", sqlInject).or().like("country", sqlInject)
+                }
+            }
+        }
+        val count = count(wrapper)
+        val offset = params.getOrDefault("offset", "0")!!.toInt()
+        wrapper.last("limit 2000 offset $offset")
+        val list = list(wrapper)
+        var previous: String? = null
+        var next: String? = null
+        if (offset > 2000) {
+            previous = url + "limit=2000&offset=" + (offset - 2000)
+        }
+        if (count > (offset + 2000)) {
+            next = url + "limit=2000&offset=" + (offset + 2000)
+        }
+        return PageUtils(count, next, previous, list)
     }
 
     @Throws(SQLOperationException::class)
